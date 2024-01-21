@@ -11,36 +11,56 @@
             <form action="" method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="component_name" value="name">
-                <input type="text" name="value">
-                {{process_form}}
-                <button class="flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-800 text-white rounded-md " type="submit">
-                    <i class="uil-comment-slash mr-1"></i>
-                        Next
-                </button>
+
+                <div class="flex items-center justify-center pb-4 text-xl">Choose name for your project</div>
+                
+                <div>
+                    <label class="pr-4" for="name_field">Project name</label>
+                    <input id="name_field" type="text" name="value">
+                </div>
+
+                <div class="flex items-center justify-center pt-7">
+                    <button class="mt-5 flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-800 text-white rounded-md " type="submit">
+                        <i class="uil-comment-slash mr-1"></i>
+                            Next
+                    </button>
+                </div>
+
             </form>
            
         {% else %}
         <!-- components process -->
             <div class="pb-4 text-xl">The next step is a <span class="font-semibold">{{component_name}}</span>.</div>
             <div class="pb-6 text-gray-600 indent-6">{{component_description}}</div>
-                <form action="" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="component_name" value="{{component_name}}">
+
+            <form action="" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="component_name" value="{{component_name}}">
+                
+                <div class="">
                     <fieldset>
                         {% for component in component_objects_list %}
-                            <div>
-                                <input type="radio" id="{{component.id}}" name="value" value="{{component.id}}" />
-                                <label for="{{component.id}}">{{component.name}}</label>
+                            <div class="flex flex-col items-center justify-center pb-14">
+                                <div class="mb-1">
+                                    <input type="radio" id="{{component.id}}" name="value" value="{{component.id}}" />
+                                    <label for="{{component.id}}">{{component.name}}</label>
+                                </div>
+                                <div>
+                                    <img src="{{component.image.url}}" alt="" align="center" class="">
+                                </div>
                             </div>
                         {% endfor %}
                     </fieldset>
-
-                    <button class="flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-800 text-white rounded-md " type="submit">
+                </div>
+                
+                <div class="flex flex-col justify-center items-center">
+                    <button class=" flex items-center justify-center px-3 py-2 bg-blue-600 hover:bg-blue-800 text-white rounded-md " type="submit">
                         <i class="uil-comment-slash mr-1"></i>
                             Next
                     </button>
-                </form>
-            
+                </div>  
+
+            </form>
         {% endif%}
 
 

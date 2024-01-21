@@ -11,7 +11,8 @@ from .services import generate_html_file
 
 class Index(View):
     def get(self, request):
-        return render(request, 'core/index.html', {})
+        results = Result.objects.filter(user=request.user)
+        return render(request, 'core/index.html', {'results':results})
 
 
 class StartProject(View):
@@ -53,17 +54,15 @@ class Process(View):
                                                              'component_description': component_description})
 
         if result.result_html:
-            #make result views
-            return redirect('index')
+            return redirect('show-result', result.id)
+
         else:
             header_html_file = result.header.html
             footer_html_file = result.footer.html
-            generated_result_html_file = generate_html_file(result.id ,header=header_html_file, footer=footer_html_file)
+            generated_result_html_file = generate_html_file(result.id, header=header_html_file, footer=footer_html_file)
             result.result_html = generated_result_html_file
             result.save()
-            print(generated_result_html_file)
-            # make result views
-            return redirect('index')
+            return redirect('show-result', result.id)
 
     def post(self, request, result_id):
         try:
@@ -74,13 +73,35 @@ class Process(View):
             raise Http404
 
         component_name = request.POST['component_name']
-        if component_name == 'name':
-            result.name = request.POST['name']
-            result.save()
-        else:
-            component_model = apps.get_model('core', component_name)
-            component_object = component_model.objects.get(id=request.POST['value'])
-            setattr(result, component_name, component_object)
-            result.save()
 
+        if component_name == 'name':
+            try:
+                result.name = request.POST['value']
+                result.save()
+            except:
+                return redirect('process', result_id)
+            return redirect('process', result_id)
+
+        else:
+            try:
+                component_model = apps.get_model('core', component_name)
+                component_object = component_model.objects.get(id=request.POST['value'])
+                setattr(result, component_name, component_object)
+                result.save()
+            except:
+                return redirect('process', result_id)
         return redirect('process', result_id)
+
+
+class ShowResult(View):
+    def get(self, request, result_id):
+        try:
+            result = Result.objects.get(id=result_id)
+            if result.user != request.user:
+                raise Http404
+        except:
+            raise Http404
+        header_html = Header.objects.get(id=1).html
+        return render(request, 'core/show_result.html', {'result_name': result.name,
+                                                         'result_html': result.result_html,
+                                                         'header_html': header_html})

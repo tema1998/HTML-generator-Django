@@ -31,7 +31,7 @@ def get_path_to_file_from_media(file):
 
 def generate_html_file(result_id, header, footer):
     path_to_base = get_path_to_file_from_media('base/base.html')
-    path_to_result = get_path_to_file_from_media(f'generated_html/{result_id}.html')
+    full_path_to_result = get_path_to_file_from_media(f'generated_html/{result_id}.html')
 
     path_to_header = get_path_to_file_from_media(header)
     path_to_footer = get_path_to_file_from_media(footer)
@@ -48,9 +48,9 @@ def generate_html_file(result_id, header, footer):
     base_bs.find('header').insert(0, header_bs)
     base_bs.find('main').insert_after(footer_bs)
 
-    result = open(path_to_result, 'w+', encoding='utf-8')
+    result = open(full_path_to_result, 'w+', encoding='utf-8')
 
     result.write(base_bs.prettify())
     result.close()
 
-    return path_to_result
+    return f'media/generated_html/{result_id}.html'

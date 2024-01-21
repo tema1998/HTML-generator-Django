@@ -5,13 +5,28 @@
 
 {% block content %}
 <main class="grow flex justify-center ">
-    <div class="p-16 w-10/12 flex flex-col items-center justify-between mt-5 bg-gray-100 rounded-2xl">
-        <div> Your projects: </div>
+    <div class="p-16 w-10/12 flex flex-col items-center mt-5 bg-gray-100 rounded-2xl">
+        <div class="">
+            <div class="flex flex-col items-center pb-4 text-xl">Your projects: </div>
+                {% if results %}
+                    {% for result in results %}
+                        <div class="pb-3">
+                            {% if not result.result_html %}
+                            <a class="flex justify-center items-center px-1 py-1 bg-orange-600 hover:bg-orange-800 text-white rounded-md" href="{% url 'process' result.id %}">{{result.name}}</a>
+                            {% else %}
+                            <a class="flex justify-center items-center px-1 py-1 bg-green-600 hover:bg-green-800 text-white rounded-md" href="{% url 'process' result.id %}">{{result.name}}</a>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="pb-6 text-gray-600 indent-6">You don't have projects yet, click <span class="font-bold">'Start new projects'</span> to begin.</div>
+                {% endif %}
+        </div>
 
-        <div>
+        <div class="mt-4">
             <form action="/start-project" method="POST">
                 {% csrf_token %}
-                <button class="flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-800 text-white rounded-md " type="submit">
+                <button class="flex items-center px-5 py-4 bg-blue-600 hover:bg-blue-800 text-white rounded-xl " type="submit">
                     <i class="uil-comment-slash mr-1"></i>
                         Start new project
                 </button>

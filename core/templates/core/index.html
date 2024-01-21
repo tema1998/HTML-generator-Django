@@ -1,0 +1,27 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %} News {% endblock title %}
+
+{% block content %}
+<main class="grow flex justify-center ">
+    <div class="p-16 w-10/12 flex flex-col items-center justify-between mt-5 bg-gray-100 rounded-2xl">
+        <div> Your projects: </div>
+
+        <div>
+            <form action="/start-project" method="POST">
+                {% csrf_token %}
+                <button class="flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-800 text-white rounded-md " type="submit">
+                    <i class="uil-comment-slash mr-1"></i>
+                        Start new project
+                </button>
+            </form>
+        </div>
+
+    </div>
+</main>
+{% endblock content %}
+
+{% block script %}
+
+{% endblock %}

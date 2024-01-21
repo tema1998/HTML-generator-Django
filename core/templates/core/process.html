@@ -1,0 +1,53 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %} News {% endblock title %}
+
+{% block content %}
+<main class="grow flex justify-center ">
+    <div class="p-16 w-10/12 flex flex-col items-center mt-5 bg-gray-100 rounded-2xl">
+        {% if component_name == 'Name' %}
+        <!-- name process -->
+            <form action="" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="component_name" value="name">
+                <input type="text" name="value">
+                {{process_form}}
+                <button class="flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-800 text-white rounded-md " type="submit">
+                    <i class="uil-comment-slash mr-1"></i>
+                        Next
+                </button>
+            </form>
+           
+        {% else %}
+        <!-- components process -->
+            <div class="pb-4 text-xl">The next step is a <span class="font-semibold">{{component_name}}</span>.</div>
+            <div class="pb-6 text-gray-600 indent-6">{{component_description}}</div>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="component_name" value="{{component_name}}">
+                    <fieldset>
+                        {% for component in component_objects_list %}
+                            <div>
+                                <input type="radio" id="{{component.id}}" name="value" value="{{component.id}}" />
+                                <label for="{{component.id}}">{{component.name}}</label>
+                            </div>
+                        {% endfor %}
+                    </fieldset>
+
+                    <button class="flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-800 text-white rounded-md " type="submit">
+                        <i class="uil-comment-slash mr-1"></i>
+                            Next
+                    </button>
+                </form>
+            
+        {% endif%}
+
+
+    </div>
+</main>
+{% endblock content %}
+
+{% block script %}
+
+{% endblock %}

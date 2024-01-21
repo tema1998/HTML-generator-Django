@@ -10,7 +10,9 @@
     <link rel="icon" type="image/x-icon" href="{% static 'img/tailwind.svg' %}">
   </head>
   <body class="">
-    {% include 'core/include/header.html' %}
+    {% block header %}
+      {% include 'core/include/header.html' %}
+    {% endblock header %}
 
     <div class="flex flex-col min-h-screen ">
         {% block content %}

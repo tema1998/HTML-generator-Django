@@ -1,28 +1,37 @@
+from django.contrib import auth, messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import transaction
 from django.http import Http404
 
 from django.shortcuts import render, redirect
 from django.views import View
 from django.apps import apps
 
-from .forms import NameForm
+from .forms import SignupForm, SigninForm
 from .models import *
 from .services import generate_html_file
 
 
-class Index(View):
+class Index(LoginRequiredMixin, View):
+    login_url = 'signin'
+
     def get(self, request):
         results = Result.objects.filter(user=request.user)
         return render(request, 'core/index.html', {'results':results})
 
 
-class StartProject(View):
+class StartProject(LoginRequiredMixin, View):
+    login_url = 'signin'
+
     def post(self, request):
         user = request.user
         result = Result.objects.create(user=user)
         return redirect('process', result.id)
 
 
-class Process(View):
+class Process(LoginRequiredMixin, View):
+    login_url = 'signin'
+
     def get(self, request, result_id):
         try:
             result = Result.objects.get(id=result_id)
@@ -35,11 +44,9 @@ class Process(View):
             component_name = 'Name'
             component_objects_list = []
             component_description = 'Enter the name'
-            process_form = NameForm()
             return render(request, 'core/process.html', {'component_name': component_name,
                                                          'component_objects_list': component_objects_list,
-                                                         'component_description': component_description,
-                                                         'process_form': process_form})
+                                                         'component_description': component_description,})
 
         components = ['header', 'footer']
         for component_name in components:
@@ -93,7 +100,9 @@ class Process(View):
         return redirect('process', result_id)
 
 
-class ShowResult(View):
+class ShowResult(LoginRequiredMixin ,View):
+    login_url = 'signin'
+
     def get(self, request, result_id):
         try:
             result = Result.objects.get(id=result_id)
@@ -105,3 +114,62 @@ class ShowResult(View):
         return render(request, 'core/show_result.html', {'result_name': result.name,
                                                          'result_html': result.result_html,
                                                          'header_html': header_html})
+
+
+class Signup(View):
+
+    def post(self, request):
+        if request.user.is_authenticated:
+            return redirect('index')
+        else:
+            signup_form = SignupForm(request.POST)
+            if signup_form.is_valid():
+                with transaction.atomic():
+                    cd = signup_form.cleaned_data
+                    username = cd['username']
+                    email = cd['email']
+                    password = cd['password']
+                    new_user = User.objects.create_user(username=username, password=password, email=email)
+
+                    auth.login(request, new_user)
+
+                    return redirect('index')
+            return render(request, 'core/signup.html', {'signup_form': signup_form})
+
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('index')
+        else:
+            signup_form = SignupForm()
+            return render(request, 'core/signup.html', {'signup_form': signup_form})
+
+
+class Signin(View):
+    def post(self, request):
+        if request.user.is_authenticated:
+            return redirect('index')
+        else:
+            signin_form = SigninForm(request.POST)
+            if signin_form.is_valid():
+                cd = signin_form.cleaned_data
+                user = auth.authenticate(username=cd['username'], password=cd['password'])
+                if user:
+                    auth.login(request, user)
+                    return redirect('index')
+            messages.error(request, f'Invalid username or password')
+            return render(request, 'core/signin.html', {'signin_form': signin_form})
+
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('index')
+        else:
+            signin_form = SigninForm()
+            return render(request, 'core/signin.html', {'signin_form': signin_form})
+
+
+class Logout(View):
+    def post(self, request):
+        auth.logout(request)
+        return redirect('signin')
+
+

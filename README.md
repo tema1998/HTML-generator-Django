@@ -17,6 +17,7 @@ Functions |
 `Create page` |
 `Download HTML file` |
 `Sign Up/ Sign In/ Log out` |
+`Add components through admin panel.` |
 
 Other HTML components will be added later.
 

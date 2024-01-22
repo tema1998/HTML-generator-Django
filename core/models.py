@@ -34,6 +34,7 @@ class Footer(models.Model):
 class Result(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=50, blank=True, null=True)
+    title = models.CharField(max_length=30, blank=True, null=True)
     header = models.ForeignKey(Header, on_delete=models.CASCADE, blank=True, null=True)
     footer = models.ForeignKey(Footer, on_delete=models.CASCADE, blank=True, null=True)
     result_html = models.FileField(blank=True, null=True)

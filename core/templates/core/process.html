@@ -12,12 +12,20 @@
                 {% csrf_token %}
                 <input type="hidden" name="component_name" value="name">
 
-                <div class="flex items-center justify-center pb-4 text-xl">Choose name for your project</div>
-                
-                <div>
-                    <label class="pr-4" for="name_field">Project name</label>
-                    <input id="name_field" type="text" name="value">
+                <div class="flex items-center justify-center pb-4 text-xl">Fill in the parametrs</div>
+
+                <div class="flex flex-col justify-center items-center">
+                    <div class="flex flex-col my-2">
+                        <label class="flex justify-center pr-4" for="name_field">Project name</label>
+                        <input class="rounded-xl" id="name_field" type="text" name="value">
+                    </div>
+    
+                    <div class="flex flex-col my-2">
+                        <label class="flex justify-center pr-4" for="page_title">Page title</label>
+                        <input class="rounded-xl" id="page_title" type="text" name="title">
+                    </div>
                 </div>
+
 
                 <div class="flex items-center justify-center pt-7">
                     <button class="mt-5 flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-800 text-white rounded-md " type="submit">

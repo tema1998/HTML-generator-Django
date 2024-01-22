@@ -7,14 +7,27 @@
 <main class="grow flex justify-center ">
     <div class="p-16 w-10/12 flex flex-col items-center mt-5 bg-gray-100 rounded-2xl">
         <div class="">
+            <div class="flex justify-center">
+                <div class="mx-3">
+                    <button class="flex justify-center items-center px-3 py-1 bg-green-600 hover:bg-green-800 text-white rounded-md" type="submit">
+                            Finished
+                    </button>
+                </div>
+                <div class="mx-3">
+                    <button class="flex justify-center items-center px-3 py-1 bg-orange-600 hover:bg-orange-800 text-white rounded-md" type="submit">
+                            Unfinished
+                    </button>
+                </div>
+            </div>
+
             <div class="flex flex-col items-center pb-4 text-xl">Your projects: </div>
                 {% if results %}
                     {% for result in results %}
                         <div class="pb-3">
                             {% if not result.result_html %}
-                            <a class="flex justify-center items-center px-1 py-1 bg-orange-600 hover:bg-orange-800 text-white rounded-md" href="{% url 'process' result.id %}">{{result.name}}</a>
+                            <a class="flex justify-center items-center px-1 py-1 bg-orange-600 hover:bg-orange-800 text-white rounded-md" href="{% url 'process' result.id %}">{{result.name|truncatechars:25}}</a>
                             {% else %}
-                            <a class="flex justify-center items-center px-1 py-1 bg-green-600 hover:bg-green-800 text-white rounded-md" href="{% url 'process' result.id %}">{{result.name}}</a>
+                            <a class="flex justify-center items-center px-1 py-1 bg-green-600 hover:bg-green-800 text-white rounded-md" href="{% url 'process' result.id %}">{{result.name|truncatechars:25}}</a>
                             {% endif %}
                         </div>
                     {% endfor %}

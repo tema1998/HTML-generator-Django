@@ -29,7 +29,7 @@ def get_path_to_file_from_media(file):
     return os.path.join(BASE_DIR, 'media', str(file))
 
 
-def generate_html_file(result_id, header, footer):
+def generate_html_file(result_id, title, header, footer):
     path_to_base = get_path_to_file_from_media('base/base.html')
     full_path_to_result = get_path_to_file_from_media(f'generated_html/{result_id}.html')
 
@@ -45,6 +45,7 @@ def generate_html_file(result_id, header, footer):
     with open(path_to_footer, 'r') as html:
         footer_bs = BeautifulSoup(html.read(), 'html.parser')
 
+    base_bs.find('title').insert(0, title)
     base_bs.find('header').insert(0, header_bs)
     base_bs.find('main').insert_after(footer_bs)
 

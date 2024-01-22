@@ -66,7 +66,7 @@ class Process(LoginRequiredMixin, View):
         else:
             header_html_file = result.header.html
             footer_html_file = result.footer.html
-            generated_result_html_file = generate_html_file(result.id, header=header_html_file, footer=footer_html_file)
+            generated_result_html_file = generate_html_file(result.id, title=result.title, header=header_html_file, footer=footer_html_file)
             result.result_html = generated_result_html_file
             result.save()
             return redirect('show-result', result.id)
@@ -84,6 +84,7 @@ class Process(LoginRequiredMixin, View):
         if component_name == 'name':
             try:
                 result.name = request.POST['value']
+                result.title = request.POST['title']
                 result.save()
             except:
                 return redirect('process', result_id)

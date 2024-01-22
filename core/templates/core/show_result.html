@@ -7,8 +7,8 @@
 <main class="grow flex justify-center ">
     <div class="p-16 w-10/12 flex flex-col items-center mt-5 bg-gray-100 rounded-2xl">
 
-        <div class="pb-4 text-xl">This is HTML code of your project <span class="font-semibold">{{result_name}}</span>.</div>
-        <div class="pb-6 text-gray-600 indent-6">You can download it or copy.</div>
+        <div class="pb-4 text-xl">This is HTML code of your project <span class="font-semibold">{{result_name|truncatechars:50}}</span>.</div>
+        <div class="pb-6 text-gray-600 indent-6">You can download it.</div>
         <div class="pb-6 text-xl">
             <a class="flex items-center px-1 py-1 bg-green-600 hover:bg-green-800 text-white rounded-md " download href={{MEDIA_URL}}/{{result_html}}>Download HTML file</a>
         </div>

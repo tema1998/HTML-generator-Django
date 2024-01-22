@@ -43,13 +43,13 @@ class Process(LoginRequiredMixin, View):
         if not result.name:
             component_name = 'Name'
             component_objects_list = []
-            component_description = 'Enter the name'
-            return render(request, 'core/process.html', {'component_name': component_name,
-                                                         'component_objects_list': component_objects_list,
-                                                         'component_description': component_description,})
 
-        components = ['header', 'footer']
-        for component_name in components:
+            return render(request, 'core/process.html', {'component_name': component_name,
+                                                         'component_objects_list': component_objects_list,})
+
+        processed_components = result.default_processed_components
+
+        for component_name in processed_components:
             component = getattr(result, component_name)
             if not component:
                 component_model = apps.get_model('core', component_name)
@@ -64,9 +64,10 @@ class Process(LoginRequiredMixin, View):
             return redirect('show-result', result.id)
 
         else:
-            header_html_file = result.header.html
-            footer_html_file = result.footer.html
-            generated_result_html_file = generate_html_file(result.id, title=result.title, header=header_html_file, footer=footer_html_file)
+            # header_html_file = result.header.html
+            # footer_html_file = result.footer.html
+            # generated_result_html_file = generate_html_file(result.id, result.default_processed_components, title=result.title, header=header_html_file, footer=footer_html_file)
+            generated_result_html_file = generate_html_file(result)
             result.result_html = generated_result_html_file
             result.save()
             return redirect('show-result', result.id)
@@ -85,8 +86,12 @@ class Process(LoginRequiredMixin, View):
             try:
                 result.name = request.POST['value']
                 result.title = request.POST['title']
+                main = request.POST['main']
+                if main:
+                    result.default_processed_components.append(main)
                 result.save()
             except:
+                print('error')
                 return redirect('process', result_id)
             return redirect('process', result_id)
 

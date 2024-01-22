@@ -24,6 +24,27 @@
                         <label class="flex justify-center pr-4" for="page_title">Page title</label>
                         <input class="rounded-xl" id="page_title" type="text" name="title">
                     </div>
+
+                    <div class="flex flex-col justify-center items-center my-2">
+                        <label class="flex justify-center pr-4" for="fieldset">Type of main page</label>
+                        <fieldset id="fieldset">
+                            <div class="mb-1">
+                                <input checked type="radio" id="empty" name="main" value="" />
+                                <label for="empty">Empty page</label>
+                            </div>
+
+                            <div class="mb-1">
+                                <input type="radio" id="signin" name="main" value="signin" />
+                                <label for="signin">Sign in</label>
+                            </div>
+
+                            <div class="mb-1">
+                                <input type="radio" id="signup" name="main" value="signup" />
+                                <label for="signup">Sign up</label>
+                            </div>
+                        </fieldset>
+                    </div>
+
                 </div>
 
 

@@ -4,54 +4,71 @@ from bs4 import BeautifulSoup
 import os
 
 
-# class Index(View):
-#
-#     def get(self, request):
-#         base_path = os.path.join(BASE_DIR, 'tailwind_generator/static/files', 'base.html')
-#         for_header_path = os.path.join(BASE_DIR, 'tailwind_generator/static/files', 'for_header.html')
-#         file2_path = os.path.join(BASE_DIR, 'tailwind_generator/static/files', 'file2.html')
-#
-#         with open(base_path, 'r') as html:
-#             base = BeautifulSoup(html.read(), 'html.parser')
-#
-#         with open(for_header_path, 'r') as html:
-#             for_header = BeautifulSoup(html.read(), 'html.parser')
-#
-#         base.find('header').insert(0, for_header)
-#         print(base.prettify())
-#
-#         file2 = open(file2_path, 'w+', encoding='utf-8')
-#         file2.write(base.prettify())
-#         file2.close()
-#         return render(request, 'core/base.html', {})
-
 def get_path_to_file_from_media(file):
     return os.path.join(BASE_DIR, 'media', str(file))
 
 
-def generate_html_file(result_id, title, header, footer):
+def get_bs_object_by_path_to_html(path_to_html):
+    with open(path_to_html, 'r') as html:
+        bs_object = BeautifulSoup(html.read(), 'html.parser')
+    return bs_object
+
+
+def paste_result_in_base_html(result):
+    base_bs = get_path_to_base_html_converted_to_bs()
+    base_bs.find('title').insert(0, result.title)
+
+    processed_components_name = result.default_processed_components
+
+    for component_name in processed_components_name:
+        component = getattr(result, component_name)
+        path_to_component = get_path_to_file_from_media(component.html)
+        component_bs = get_bs_object_by_path_to_html(path_to_component)
+        try:
+            base_bs.find(component_name).insert(0, component_bs)
+        except AttributeError:
+            new_component_name = 'main'
+            base_bs.find(new_component_name).insert(0, component_bs)
+    return base_bs
+
+
+def get_path_to_base_html_converted_to_bs():
     path_to_base = get_path_to_file_from_media('base/base.html')
+    base_bs = get_bs_object_by_path_to_html(path_to_base)
+    return base_bs
+
+
+def save_result_html_file(result_id, base_bs):
     full_path_to_result = get_path_to_file_from_media(f'generated_html/{result_id}.html')
-
-    path_to_header = get_path_to_file_from_media(header)
-    path_to_footer = get_path_to_file_from_media(footer)
-
-    with open(path_to_base, 'r') as html:
-        base_bs = BeautifulSoup(html.read(), 'html.parser')
-
-    with open(path_to_header, 'r') as html:
-        header_bs = BeautifulSoup(html.read(), 'html.parser')
-
-    with open(path_to_footer, 'r') as html:
-        footer_bs = BeautifulSoup(html.read(), 'html.parser')
-
-    base_bs.find('title').insert(0, title)
-    base_bs.find('header').insert(0, header_bs)
-    base_bs.find('main').insert_after(footer_bs)
-
     result = open(full_path_to_result, 'w+', encoding='utf-8')
-
     result.write(base_bs.prettify())
     result.close()
 
-    return f'media/generated_html/{result_id}.html'
+
+def generate_html_file(result):
+    processed_base_bs = paste_result_in_base_html(result)
+    save_result_html_file(result.id, processed_base_bs)
+
+    return f'media/generated_html/{result.id}.html'
+#
+# def generate_html_file(result_id, processed_components, title, header, footer, signin=None, signup=None):
+#     path_to_base = get_path_to_file_from_media('base/base.html')
+#     full_path_to_result = get_path_to_file_from_media(f'generated_html/{result_id}.html')
+#
+#     path_to_header = get_path_to_file_from_media(header)
+#     path_to_footer = get_path_to_file_from_media(footer)
+#
+#     base_bs = get_bs_object_by_path_to_html(path_to_base)
+#     header_bs = get_bs_object_by_path_to_html(path_to_header)
+#     footer_bs = get_bs_object_by_path_to_html(path_to_footer)
+#
+#     base_bs.find('title').insert(0, title)
+#     base_bs.find('header').insert(0, header_bs)
+#     base_bs.find('footer').insert(0, footer_bs)
+#
+#     result = open(full_path_to_result, 'w+', encoding='utf-8')
+#
+#     result.write(base_bs.prettify())
+#     result.close()
+#
+#     return f'media/generated_html/{result_id}.html'

@@ -2,7 +2,7 @@
 It is a simple generator of HTML pages based on Tailwind CSS components. You only need to select the required components and this application will build HTML page for your project.
 
 ## Tailwind
-The components were taken from the next sites: \
+This is not a commercial project. All components used in the project are taken from the next sites: \
 [flowbite.com](https://flowbite.com/) \
 [tw-elements.com](https://tw-elements.com/) 
 

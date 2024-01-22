@@ -6,6 +6,9 @@ The components were taken from the next sites: \
 [flowbite.com](https://flowbite.com/) \
 [tw-elements.com](https://tw-elements.com/) 
 
+## Screenshot
+<image align="center" src="tailwind_generator/static/img/screen.png" alt="">
+
 ## Functions
 HTML page creation is implemented using the library BeautifulSoup4.
 
@@ -14,6 +17,8 @@ Functions |
 `Project repository` |
 `Choose header` |
 `Choose footer` |
+`Add sign in form` |
+`Add sign up form` |
 `Create page` |
 `Download HTML file` |
 `Sign Up/ Sign In/ Log out` |
